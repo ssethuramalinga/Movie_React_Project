@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie List</title>
+  </head>
+  <body>
+
+
+    <!--putting all returned app.jsx components inside of <div></div>-->
+    <!--since the browser that runs my code does NOT understand jsx and React components, and only understands HTML, CSS, Javascript...-->
+    <!--...then all App.jsc elements are stored in <div></div> so that when we run 'npm run dev',
+    the local vite server will show the html components to the browser instead of the confusing react components
+    and jsx.-->
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
