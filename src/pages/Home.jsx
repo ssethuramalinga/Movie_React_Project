@@ -1,4 +1,5 @@
 import MovieCard from "../component/MovieCard";
+import "../css/Home.css"
 import {useState} from "react"
 
 function Home() {
@@ -45,17 +46,26 @@ function Home() {
                 />
                 <button
                     type = "submit"
-                    className = "seach-button"
+                    className = "search-button"
                 > Search </button>
             </form>
             <div className="movie-grid">
                 {movies.map((movie) => 
-                movie.title.toLowerCase().startsWith(searchQuery) && 
                  <MovieCard movie={movie} key={movie.id}/>)}
             </div>
         </div>
-
+        /*
+          for every single letter the user types in input box, react automatically updates what is stored in searchQuery.
+          searchQuery may have initially had h then he then hel then hell then hello.
+          Every SINGLE time there is a change in state, the entire home function runs again.
+          So then inside of movies.map()..., React traverses through every single movie object in the database,
+          checks if that movie object's title starts with startQuery (what user typed so far), and if so,
+          then that specific MovieCard is displayed. And so on...Before the next change in state (next letter typed),
+          the UI will be updated for 'h' alone.
+        */ 
         //in code above (movie.title.toLowerCase()...), if any movie title in database matches what was in searchQuery typed by user, then only display that specific movie card
+
+        //IMPORTANT: for every single change in state, the whole function is ran again and webpage UI is updated, EVEN before user types in next letter
     );
 }
 

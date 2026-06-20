@@ -1,6 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+
+//this is to allow page routing to happen
+import {BrowserRouter} from "react-router-dom"
+
+import './css/index.css'
 import App from './App.jsx'
 
 /*Idea: program starts at index.html. The browser first receives an empty <div>root</div>.
@@ -15,6 +19,8 @@ Once index.html finally gets its UI elements inside root div, now the browser ca
 //only returns what is inside App function in App.jsx
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StrictMode>,
 )
