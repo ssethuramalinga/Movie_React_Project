@@ -1,13 +1,13 @@
 import MovieCard from "../component/MovieCard";
 import "../css/Home.css"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 
 function Home() {
     //searchQuery stores what user typed in input search bar (what React remembers)
     //setSearchQuery is function that changes what React remembers
+    //UseState remembers searchQuery AND movies between renders
 
-    const [searchQuery, setSearchQuery] = useState("")
-
+    const [searchQuery, setSearchQuery] = useState("");
 
     const movies = [
         {title: "Harry Potter", release_date:"2022", id : 1},
@@ -15,6 +15,17 @@ function Home() {
         {title:"Yay", release_date:"2022", id:3},
         {title: "wahoo", release_date:"2021", id:4}
     ]
+    
+
+    /* 
+      UseEffect - React runs certain code at specific times instead of every render
+      If any of the values inside of the [] changes, then getPopularMovies() runs.
+      If no value changes inside of [], getPopularMovies() never runs again regardless of how many times state changes and code runs again.
+      That's because getPopularMovies() sends API request to get all popular movies, so we don't want
+      to be sending millions of APi requests when we already have all popular movies if we run the code once
+    */
+    useEffect(() => {}, [])
+
 
     const handleSearch = (e) => {
         //clicking onSubmit() in form automatically refreshes page and so text in input box disappears, so if we don't want that then do this below:
