@@ -1,41 +1,82 @@
 import MovieCard from "../component/MovieCard";
 import "../css/Home.css"
 import {useState, useEffect} from "react"
+import {searchMovies, getPopularMovies} from "../services/api"
 
 function Home() {
     //searchQuery stores what user typed in input search bar (what React remembers)
     //setSearchQuery is function that changes what React remembers
     //UseState remembers searchQuery AND movies between renders
 
+    /*
+        These variarblaes searchQuery = "", movies = [], error = null, loading = true
+        will be stored in React's memory. We use the setFunction("something") to make the
+        variable stored in React's memory equal to "something" now.
+    */
     const [searchQuery, setSearchQuery] = useState("");
-
-    const movies = [
-        {title: "Harry Potter", release_date:"2022", id : 1},
-        {title: "Minions", release_date:"2025", id:2},
-        {title:"Yay", release_date:"2022", id:3},
-        {title: "wahoo", release_date:"2021", id:4}
-    ]
-    
+    const [movies, setMovies] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     /* 
       UseEffect - React runs certain code at specific times instead of every render
       If any of the values inside of the [] changes, then getPopularMovies() runs.
       If no value changes inside of [], getPopularMovies() never runs again regardless of how many times state changes and code runs again.
       That's because getPopularMovies() sends API request to get all popular movies, so we don't want
-      to be sending millions of APi requests when we already have all popular movies if we run the code once
+      to be sending millions of APi requests when we already have all popular movies if we run the code once.
+
+      UseEffect, in this case, only runs ONCE because of empty array []. useEffect gets skipped and only runs after all the rest of code runs.
     */
-    useEffect(() => {}, [])
+    useEffect(() => {
+        const loadPopularMovies = async () => {
+            try {
+                const popularMovies = await getPopularMovies();
+                setMovies(popularMovies);
+            } catch (err) {
+                console.log(err);
+                setError("Failed to load movies...");
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadPopularMovies();
+    }, [])
 
+    /*
+        In handleSearch runs only if user submits the input box search form.
+        This code checks if searchQuery is null, checks if there is another api running
+        (in that case we don't want 2 api calls at the same time).
+        Then, searchMovies() is called on and returns all movie objects in an array starting with the title that is in searchQuery.
+    */
 
-    const handleSearch = (e) => {
+    const handleSearch = async (e) => {
         //clicking onSubmit() in form automatically refreshes page and so text in input box disappears, so if we don't want that then do this below:
         e.preventDefault()
 
-        alert(searchQuery);
+        //if searchquery is empty string, then leave function
+        if (!searchQuery.trim()) {
+            return
+        }
 
-        //after alert pops up, we make ---- be inside the input box since we made searchQuery now contain "-----"
-        setSearchQuery("-----");
+        //we dont want two api calls to run at once so we leave handleSearch if useEffect is still running and waiting on popular movies
+        if (loading) {
+            return
+        }
+        setLoading(true);
+
+        try {
+            const searchResults = await searchMovies(searchQuery);
+            setMovies(searchResults);
+            setError(null);
+        } catch(err) {
+            console.log(err)
+            setError("Failed to search movies...")
+        } finally {
+            setLoading(false);
+        }
     }
+
+
 
     return(
         <div className="Home">
@@ -60,10 +101,18 @@ function Home() {
                     className = "search-button"
                 > Search </button>
             </form>
-            <div className="movie-grid">
-                {movies.map((movie) => 
-                 <MovieCard movie={movie} key={movie.id}/>)}
-            </div>
+
+            {error && <div className = "error-message">{error}</div>}
+
+            {loading ? (
+            <div className = "loading">Loading...</div> 
+            ) : ( 
+                        <div className="movie-grid">
+                            {movies.map((movie) => 
+                            <MovieCard movie={movie} key={movie.id}/>)}
+                        </div>
+            )}
+
         </div>
         /*
           for every single letter the user types in input box, react automatically updates what is stored in searchQuery.
