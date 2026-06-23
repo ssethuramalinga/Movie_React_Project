@@ -17,6 +17,8 @@ Once index.html finally gets its UI elements inside root div, now the browser ca
 */
 
 //only returns what is inside App function in App.jsx
+
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
