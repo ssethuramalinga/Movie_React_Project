@@ -9,7 +9,16 @@ export const useMovieContext = () => useContext(MovieContext)
 //MovieProvider is wrapped around App, so ANY component under App can access the variable and functions in this
 //index.html -> main -> MovieProvider -> App -> Home, NavBar, Favorites -> MovieCard
 export const MovieProvider = ({children}) => {
-    const [favorites, setFavorites] = useState([])
+
+    /*
+        Initially, after refreshing the page, I noticed that favorite movies were not saved between refreshes.
+        Probably because second useEffect() was running before first useEffect().
+        Solution: immedately get the array from localStorage inside of useState
+    */
+    const [favorites, setFavorites] = useState(() => {
+        const storedFavs = localStorage.getItem("favorites");
+        return storedFavs ? JSON.parse(storedFavs) : [];
+    })
 
     useEffect(() => {
         const storedFavs = localStorage.getItem("favorites")

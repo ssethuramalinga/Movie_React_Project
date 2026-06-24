@@ -12,6 +12,10 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.favorites h2.title {
+  color:#e50914;
+}
+
 .favorites-empty {
   text-align: center;
   padding: 4rem 2rem;
